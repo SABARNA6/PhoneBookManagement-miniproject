@@ -1,0 +1,24 @@
+@import "tailwindcss";
+/* 
+body {
+    background-color:oklch(44.6% 0.043 257.281);
+}
+
+input, textarea {
+    color: whitesmoke;
+    margin: 1px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    border: none;
+    outline: none;
+}
+
+button {
+    margin-left: 2px;
+    
+    padding: 2px 12px; 
+    border-radius: 2px;
+    cursor: pointer;
+    min-width: 80px;
+    transition: all 0.2s ease-in-out; 
+} */
