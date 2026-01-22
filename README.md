@@ -1,16 +1,55 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## **Project Aim**
 
-Currently, two official plugins are available:
+**Aim:**
+To build and deploy a **Phone Book Management web application** that allows users to **add, edit, delete, and view contacts**, using a modern frontend stack (React + Tailwind CSS + Vite) and Docker for containerization. The project is hosted on **Render** to demonstrate deployment of a containerized web application.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
+Live link :<https://phonebookmanagement-miniproject.onrender.com>
 
-## React Compiler
+## **Problems Faced(What i Learned with this project deployment)**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. **Docker Image Issues**
 
-## Expanding the ESLint configuration
+   * Initially, your Dockerfile was not properly structured.
+   * Node modules were being copied incorrectly.
+   * Port exposure was not aligned with Render requirements.
+   * The app inside the container was listening on `127.0.0.1` instead of `0.0.0.0`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. **Port Mapping Issues**
+
+   * Vite’s default port (5173) or hardcoded port (3000) did not match Render’s dynamic `$PORT`.
+   * Browsers received `ERR_EMPTY_RESPONSE` because Docker/Render could not forward traffic to the wrong port.
+
+3. **Vite Security Restriction**
+
+   * “Blocked request” errors occurred because Render’s host (`phonebookmanagement-miniproject.onrender.com`) was not listed in `server.allowedHosts`.
+   * Only localhost requests were initially allowed.
+
+4. **Docker Hub & Image Deployment**
+
+   * Pushing images to Docker Hub required correct tagging (`<username>/<repo>:<tag>`).
+   * Private images caused deployment errors in Hugging Face or Render if credentials were not provided.
+
+5. **Render Deployment Configuration**
+
+   * Misunderstanding of the port Render expects (default 10000 / `$PORT` environment variable).
+   * Using hardcoded ports broke deployment.
+   * Initial Docker CMD did not pass `--host` or the `$PORT` variable.
+   * Logs and debugging were needed to check if the app was running inside the container.
+
+6. **General Development Environment Issues**
+
+   * Using Vite + Tailwind + React requires proper configuration for Docker and production deployment.
+   * Local development settings (like `5173` port) conflicted with containerized deployment requirements.
+
+---
+
+## **Summary of Key Fixes**
+
+* Use **`--host`** to bind to `0.0.0.0`.
+* Use **Render’s `$PORT`** environment variable instead of hardcoding a port.
+* Add Render’s host to **`allowedHosts`** in `vite.config.js`.
+* Properly structure **Dockerfile** with multi-step copy and npm install.
+* Push **public Docker images** correctly for deployment.
+* Check logs to verify container health and accessibility.
