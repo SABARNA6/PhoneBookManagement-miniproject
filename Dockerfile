@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 # Expose any port (optional)
-EXPOSE 3000
+EXPOSE 10000
 
 # Start command
-CMD ["sh", "-c", "npm run dev -- --host --port 3000"]
+CMD ["sh", "-c", "npm run dev -- --host --port 10000"]
